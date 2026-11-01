@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { translations } from "./translations";
+import formalPhoto from "./assets/mahdiyeh-formal.jpg";
+import portraitPhoto from "./assets/mahdiyeh-portrait.jpg";
 
 /* ---------------- helpers ---------------- */
 const localize = (str, isRTL) => {
@@ -156,7 +158,7 @@ function Nav({ t, isRTL, lang, setLang }) {
     <nav className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${scrolled || open ? "border-b border-paper/10 bg-deep/85 backdrop-blur-md" : "bg-transparent"}`}>
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <a href="#top" className="flex items-center gap-3">
-          <span className="grid h-9 w-9 place-items-center rounded-md bg-azure font-display text-sm font-bold text-white">
+          <span className="grid h-9 w-9 place-items-center rounded-md bg-azure font-display text-sm font-bold text-white shadow-sm">
             {isRTL ? "م.و" : "MV"}
           </span>
           <span className="hidden font-mono text-sm text-paper sm:block">
@@ -165,11 +167,20 @@ function Nav({ t, isRTL, lang, setLang }) {
         </a>
 
         <div className="hidden items-center gap-7 md:flex">
-          {Object.entries(t.nav).map(([key, label]) => (
+          {Object.entries(t.nav).filter(([k]) => k !== "resume").map(([key, label]) => (
             <a key={key} href={`#${key}`} className={`nav-link font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${active === key ? "active text-spark" : "text-fog hover:text-paper"}`}>
               {label}
             </a>
           ))}
+          <a
+            href="/Mahdiyeh-Valian-CV.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-[11px] uppercase tracking-[0.2em] text-spark hover:text-white border border-spark/40 hover:border-spark bg-spark/10 px-3.5 py-1 rounded-full transition flex items-center gap-1.5 shadow-sm"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            {t.nav.resume || "Resume"}
+          </a>
           <button onClick={() => setLang(lang === "en" ? "fa" : "en")} className="font-mono text-[11px] uppercase tracking-[0.2em] text-fog hover:text-spark border border-paper/20 px-3 py-1 rounded-full transition">
             {lang === "en" ? "FA" : "EN"}
           </button>
@@ -184,11 +195,21 @@ function Nav({ t, isRTL, lang, setLang }) {
 
       {open && (
         <div className="flex flex-col gap-1 px-6 pb-6 md:hidden">
-          {Object.entries(t.nav).map(([key, label]) => (
+          {Object.entries(t.nav).filter(([k]) => k !== "resume").map(([key, label]) => (
             <a key={key} href={`#${key}`} onClick={() => setOpen(false)} className="rounded-md px-3 py-2.5 font-mono text-xs uppercase tracking-[0.2em] text-fog transition hover:bg-paper/5 hover:text-spark">
               {label}
             </a>
           ))}
+          <a
+            href="/Mahdiyeh-Valian-CV.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setOpen(false)}
+            className="rounded-md px-3 py-2.5 font-mono text-xs uppercase tracking-[0.2em] text-spark transition hover:bg-paper/5 flex items-center gap-2"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            {t.nav.resume || "Resume (PDF)"}
+          </a>
           <button onClick={() => setLang(lang === "en" ? "fa" : "en")} className="rounded-md px-3 py-2.5 text-start font-mono text-xs uppercase tracking-[0.2em] text-fog transition hover:bg-paper/5 hover:text-spark">
             {lang === "en" ? "FA / فارسی" : "EN / English"}
           </button>
@@ -219,31 +240,83 @@ function Hero({ t, isRTL }) {
       <div className="pointer-events-none absolute -right-40 top-0 h-[420px] w-[420px] rounded-full bg-azure/15 blur-[130px]" aria-hidden="true" />
 
       <div className="relative mx-auto max-w-6xl px-6 pb-10 pt-32 md:pt-40">
-        <p className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-fog">
-          <span className="blip text-spark">●</span>
-          {t.site.availability}
-          <span className="text-paper/30">/</span>
-          {t.site.location}
-        </p>
+        <div className="grid gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-center">
+          <div>
+            <p className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.3em] text-fog">
+              <span className="blip text-spark">●</span>
+              {t.site.availability}
+              <span className="text-paper/30">/</span>
+              {t.site.location}
+            </p>
 
-        <h1 className="mt-8 font-display font-bold leading-[0.95] tracking-tight">
-          <span className="block text-6xl md:text-8xl">{t.site.name.split(" ")[0]}</span>
-          <span className="text-outline block text-6xl md:text-8xl">{t.site.name.split(" ")[1] || ""}</span>
-        </h1>
+            <h1 className="mt-8 font-display font-bold leading-[0.95] tracking-tight">
+              <span className="block text-6xl md:text-8xl">{t.site.name.split(" ")[0]}</span>
+              <span className="text-outline block text-6xl md:text-8xl">{t.site.name.split(" ")[1] || ""}</span>
+            </h1>
 
-        <p className="mt-6 font-mono text-xs tracking-[0.35em] text-spark md:text-sm">&gt; {decoded}</p>
+            <p className="mt-6 font-mono text-xs tracking-[0.35em] text-spark md:text-sm">&gt; {decoded}</p>
 
-        <p className="mt-8 max-w-xl text-base leading-relaxed text-fog md:text-lg">
-          {t.site.summary} {t.site.summaryExtra}
-        </p>
+            <p className="mt-8 max-w-xl text-base leading-relaxed text-fog md:text-lg">
+              {t.site.summary} {t.site.summaryExtra}
+            </p>
 
-        <div className="mt-10 flex flex-wrap items-center gap-4">
-          <a href="#research" className="bg-azure px-7 py-3.5 font-mono text-sm text-white shadow-lift transition hover:-translate-y-0.5 hover:bg-azure-deep">
-            {t.hero.explore}
-          </a>
-          <a href={`mailto:${t.site.email}`} className="border border-paper/25 px-7 py-3.5 font-mono text-sm text-paper transition hover:-translate-y-0.5 hover:border-spark hover:text-spark">
-            {t.hero.touch}
-          </a>
+            <div className="mt-10 flex flex-wrap items-center gap-4">
+              <a href="#research" className="bg-azure px-7 py-3.5 font-mono text-sm text-white shadow-lift transition hover:-translate-y-0.5 hover:bg-azure-deep">
+                {t.hero.explore}
+              </a>
+              <a href={`mailto:${t.site.email}`} className="border border-paper/25 px-7 py-3.5 font-mono text-sm text-paper transition hover:-translate-y-0.5 hover:border-spark hover:text-spark">
+                {t.hero.touch}
+              </a>
+              <a
+                href="/Mahdiyeh-Valian-CV.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-spark/50 bg-spark/10 px-6 py-3.5 font-mono text-sm text-spark transition hover:-translate-y-0.5 hover:bg-spark hover:text-deep flex items-center gap-2 font-medium shadow-lift"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 18 15 15"/></svg>
+                {t.hero.downloadCv}
+              </a>
+            </div>
+          </div>
+
+          {/* Hero Profile Photo Card */}
+          <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
+            <Reveal delay={150}>
+              <div className="relative overflow-hidden rounded-2xl border border-paper/15 bg-paper/5 p-3 shadow-2xl backdrop-blur-md transition duration-500 hover:border-spark/40 hover:shadow-glow group">
+                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xl bg-ink">
+                  <img
+                    src={formalPhoto}
+                    alt={t.site.name}
+                    className="h-full w-full object-cover object-top transition duration-700 group-hover:scale-105"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-deep/95 via-deep/20 to-transparent" />
+                  <div className="absolute top-3 inset-x-3 flex items-center justify-between font-mono text-[10px] text-spark">
+                    <span className="rounded-full bg-deep/80 px-2.5 py-1 backdrop-blur-md border border-spark/30">
+                      ● {isRTL ? "پژوهشگر هوش مصنوعی" : "AI Researcher"}
+                    </span>
+                    <span className="rounded-full bg-deep/80 px-2.5 py-1 text-fog border border-paper/20">
+                      MSc · AI
+                    </span>
+                  </div>
+                  <div className="absolute bottom-4 inset-x-4 flex items-end justify-between">
+                    <div>
+                      <div className="font-display text-xl font-bold text-white">{t.site.name}</div>
+                      <div className="font-mono text-xs text-spark">{t.site.role}</div>
+                    </div>
+                    <a
+                      href="/Mahdiyeh-Valian-CV.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-azure/90 px-3 py-1.5 font-mono text-xs text-white hover:bg-azure border border-white/20 shadow-md backdrop-blur-md transition hover:-translate-y-0.5"
+                    >
+                      <span>CV</span>
+                      <span>↗</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+          </div>
         </div>
 
         <div className="mt-16 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-paper/10 pt-8 md:grid-cols-4">
@@ -271,31 +344,73 @@ function Hero({ t, isRTL }) {
 }
 
 function About({ t, isRTL }) {
+  const [photoView, setPhotoView] = useState("academic");
+  const currentPhoto = photoView === "academic" ? portraitPhoto : formalPhoto;
+
   return (
     <section id="about" className="scroll-mt-20 py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <SectionHead index="01" kicker={t.about.kicker} title={t.about.title} isRTL={isRTL} />
 
-        <div className="mt-12 grid gap-12 lg:grid-cols-[340px_1fr]">
+        <div className="mt-12 grid gap-12 lg:grid-cols-[360px_1fr]">
           <div className="space-y-6 self-start lg:sticky lg:top-28">
             <Reveal>
-              <div className="relative overflow-hidden rounded-xl bg-ink p-8 text-paper shadow-lift">
+              <div className="relative overflow-hidden rounded-2xl bg-ink p-6 text-paper shadow-lift border border-paper/10">
                 <div className="grid-bg absolute inset-0 opacity-60" />
                 <div className="relative">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-fog">{t.about.portrait}</span>
-                  <div className="mt-6 font-display text-7xl font-bold text-spark">{isRTL ? "م.و" : "MV"}</div>
-                  <svg viewBox="0 0 300 40" className="mt-6 h-10 w-full" aria-hidden="true">
-                    <path d="M0 20 L20 20 L28 6 L36 34 L44 20 L80 20 L90 10 L100 30 L110 20 L150 20 L160 2 L170 38 L180 20 L220 20 L230 12 L240 28 L250 20 L300 20" fill="none" strokeWidth="1.5" className="stroke-azure" />
+                  <div className="flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.3em] text-fog">
+                    <span>{t.about.portrait}</span>
+                    <div className="flex gap-1 bg-paper/10 p-0.5 rounded-lg border border-paper/10">
+                      <button
+                        onClick={() => setPhotoView("academic")}
+                        className={`px-2.5 py-0.5 rounded text-[10px] font-mono transition ${photoView === "academic" ? "bg-spark text-deep font-bold" : "text-fog hover:text-paper"}`}
+                      >
+                        {t.about.photoLabels.academic}
+                      </button>
+                      <button
+                        onClick={() => setPhotoView("formal")}
+                        className={`px-2.5 py-0.5 rounded text-[10px] font-mono transition ${photoView === "formal" ? "bg-spark text-deep font-bold" : "text-fog hover:text-paper"}`}
+                      >
+                        {t.about.photoLabels.formal}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 relative aspect-[4/5] w-full overflow-hidden rounded-xl border border-paper/15 shadow-inner group">
+                    <img
+                      src={currentPhoto}
+                      alt={t.site.name}
+                      key={photoView}
+                      className="h-full w-full object-cover object-top transition duration-500 group-hover:scale-105"
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
+                  </div>
+
+                  <svg viewBox="0 0 300 36" className="mt-4 h-8 w-full" aria-hidden="true">
+                    <path d="M0 18 L20 18 L28 6 L36 30 L44 18 L80 18 L90 8 L100 28 L110 18 L150 18 L160 2 L170 34 L180 18 L220 18 L230 10 L240 26 L250 18 L300 18" fill="none" strokeWidth="1.5" className="stroke-azure" />
                   </svg>
-                  <div className="mt-6 border-t border-paper/10 pt-4 font-mono text-[11px] leading-relaxed text-fog">
-                    {t.site.name}<br />{t.site.role} · {t.site.location}
+
+                  <div className="mt-4 border-t border-paper/10 pt-4 flex items-center justify-between font-mono text-[11px] text-fog">
+                    <div>
+                      <div className="font-display text-base font-bold text-white">{t.site.name}</div>
+                      <div>{t.site.role} · {t.site.location}</div>
+                    </div>
+                    <a
+                      href="/Mahdiyeh-Valian-CV.pdf"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-md border border-spark/40 bg-spark/10 px-3 py-1.5 font-mono text-xs text-spark hover:bg-spark hover:text-deep transition"
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      <span>PDF</span>
+                    </a>
                   </div>
                 </div>
               </div>
             </Reveal>
 
             <Reveal delay={140}>
-              <dl className="divide-y divide-mist rounded-xl border border-mist bg-white px-6">
+              <dl className="divide-y divide-mist rounded-xl border border-mist bg-white px-6 shadow-sm">
                 <Fact k={t.about.facts.location} v={t.site.location} isRTL={isRTL} />
                 <Fact k={t.about.facts.email} v={t.site.email} isRTL={isRTL} />
                 <Fact k={t.about.facts.languages} v={t.about.langs} isRTL={isRTL} />
@@ -573,9 +688,24 @@ function Contact({ t, isRTL }) {
               <ContactRow label={t.contact.labels.location} value={t.site.location} isRTL={isRTL} />
               <ContactRow label={t.contact.labels.linkedin} value={t.contact.linkedinVal} href="#" isRTL={isRTL} />
             </div>
-            <a href="/Mahdiyeh-Valian-CV.pdf" className="mt-8 inline-flex items-center gap-3 bg-azure px-6 py-3.5 font-mono text-sm text-white transition hover:-translate-y-0.5 hover:bg-azure-deep">
-              {t.contact.download}
-            </a>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <a
+                href="/Mahdiyeh-Valian-CV.pdf"
+                download="Mahdiyeh-Valian-CV.pdf"
+                className="inline-flex items-center gap-3 bg-azure px-6 py-3.5 font-mono text-sm text-white transition hover:-translate-y-0.5 hover:bg-azure-deep shadow-lift"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                {t.contact.download}
+              </a>
+              <a
+                href="/Mahdiyeh-Valian-CV.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 border border-paper/20 px-5 py-3.5 font-mono text-sm text-paper transition hover:-translate-y-0.5 hover:border-spark hover:text-spark"
+              >
+                {t.contact.view}
+              </a>
+            </div>
           </div>
         </div>
 
